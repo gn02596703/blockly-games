@@ -63,6 +63,11 @@ pattern-en: common-en
 	$(SOY_COMPILER) --outputPathFormat appengine/pattern/generated/en/soy.js --srcs appengine/pattern/template.soy
 	python build-app.py pattern en
 
+AG-en: common-en
+	$(SOY_COMPILER) --outputPathFormat appengine/AG/generated/en/soy.js --srcs appengine/AG/template.soy
+	python build-app.py AG en
+	
+	
 pond-common-en: common-en
 	$(SOY_COMPILER) --outputPathFormat appengine/pond/generated/en/soy.js --srcs appengine/pond/template.soy
 common-en:

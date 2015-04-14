@@ -1,10 +1,10 @@
-{namespace Pinball.soy}
+{namespace Ag.soy}
 
 /**
  * This is a Closure Template.
  *
  * To regenerate just English, run:
- *   make pinball-en
+ *   make Ag-en
  *
  * To regenerate all languages, run:
  *   make languages
@@ -15,7 +15,7 @@
  */
 {template .messages}
   <div style="display: none">
-     Pinball is an arduino-based educational toy!    
+     Ag is an arduino-based educational toy!    
   </div>
 {/template}
 
@@ -32,7 +32,7 @@
         <h1>
           {call BlocklyGames.soy.titleSpan}
             {param appName}
-              {msg meaning="Games.pinball" desc="IBID"}Pinball{/msg}
+              {msg meaning="Games.Ag" desc="IBID"}Ag{/msg}
             {/param}
           {/call}
         </h1>
@@ -51,12 +51,12 @@
   {call BlocklyGames.soy.dialog /}
   <div id="help" class="dialogHiddenContent">
     <div style="padding-bottom: 0.7ex">
-      {msg meaning="Pinball.helpText"
-           desc="Instructions for the pinball."}
-        If you like pinball, please support us in our facebook fan page. 
+      {msg meaning="Ag.helpText"
+           desc="Instructions for the Ag."}
+        If you like Ag, please support us in our facebook fan page. 
       {/msg}
     </div>
-    <iframe style="height: 400px; width: 100%; border: none;" src="pinball/pinball_blockly.html?lang={$ij.lang}"></iframe> 
+    <iframe style="height: 400px; width: 100%; border: none;" src="Ag/Ag_blockly.html?lang={$ij.lang}"></iframe> 
     {call BlocklyGames.soy.ok /}
   </div>
   <div id="executeProgram" class="dialogHiddenContent">
@@ -73,7 +73,7 @@
  */
 {template .toolbox}
 <xml id="toolbox" style="display: none">
-  <category name="Pinball">
+  <category name="Ag">
 	<category name = "Arduino">
 		
 	</category>

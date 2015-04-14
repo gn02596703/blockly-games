@@ -1,3 +1,62 @@
+How to create a new blockly game?
+
+Firstly, Fork and clone the google blockly games from GitHub
+https://github.com/google/blockly-games/wiki/Build
+
+Then follow the below instructions:
+
+0. required file structure
+
+<game>.html
+<game dir>
+   |____ js  ------  blocks.js
+          | _______  <game>.js
+   |____ template.soy
+
+
+1. Prepare a blocks.js file for all the blocks used in the game and put the file in appengine/<game dir>/js/blocks.js
+
+
+'use strict';
+
+goog.provide('<game>.Blocks');
+
+goog.require('Blockly');
+goog.require('BlocklyGames');
+goog.require('Blockly.JavaScript');
+goog.require('Blockly.Blocks.colour');
+goog.require('Blockly.JavaScript.colour');
+goog.require('Blockly.Blocks.lists');
+goog.require('Blockly.JavaScript.lists');
+goog.require('Blockly.Blocks.logic');
+goog.require('Blockly.JavaScript.logic');
+goog.require('Blockly.Blocks.loops');
+goog.require('Blockly.JavaScript.loops');
+goog.require('Blockly.Blocks.math');
+goog.require('Blockly.JavaScript.math');
+goog.require('Blockly.Blocks.procedures');
+goog.require('Blockly.JavaScript.procedures');
+goog.require('Blockly.Blocks.texts');
+goog.require('Blockly.JavaScript.texts');
+goog.require('Blockly.Blocks.variables');
+goog.require('Blockly.JavaScript.variables');
+goog.require('BlocklyGames');
+
+
+//Use block factory to generate  the required Blockly.Blocks[] and Blockly.JavaScript[] definitions
+//And put all definitions in this file
+
+Blockly.Blocks['<block name>'] = {
+ .......
+};
+
+Blockly.JavaScript['<block name>'] = function(block) {
+  .......
+};
+
+2. Prepare a closure template .soy file (e.g. template.soy) and put the file in appengine/<game dir>/
+
+
 {namespace Pinball.soy}
 
 /**
@@ -74,9 +133,6 @@
 {template .toolbox}
 <xml id="toolbox" style="display: none">
   <category name="Pinball">
-	<category name = "Arduino">
-		
-	</category>
     <category name="Channel">
     <block type="a_ball_passes_channel"></block>
     <block type="a_channel_is_full"></block>
@@ -312,3 +368,90 @@
   {call .messages /}
   <div id="blockly"></div>
 {/template}
+
+
+3. Prepare <game>.html file and create a CSS file (style.css) in <game dir>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="google" value="notranslate">
+  <meta name="viewport" content="dpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Blockly Games : <game> </title>
+  <link rel="stylesheet" type="text/css" href="common/common.css">
+  <link rel="stylesheet" type="text/css" href="<game dir>/style.css">
+  <script type="text/javascript" src="common/boot.js"></script>
+</head>
+<body>
+</body>
+</html>
+
+
+
+4. Prepare <game>.js file and put the file in appengine/<game dir>/js/
+
+  Use Pinball game as an example
+
+/**
+ * Blockly Games: Pinball
+
+/**
+ * @author weifen@mijotech.net
+ */
+'use strict';
+
+goog.provide('Pinball');
+
+goog.require('Pinball.soy');
+goog.require('Pinball.Blocks');
+goog.require('BlocklyDialogs');
+goog.require('BlocklyGames');
+goog.require('BlocklyInterface');
+goog.require('goog.math');
+
+
+BlocklyGames.NAME = 'pinball';
+
+/**
+ * Initialize Blockly and the pinball.  Called on page load.
+ */
+Pinball.init = function() {
+  // Render the Soy template.
+  document.body.innerHTML = Pinball.soy.start({}, null,
+      {lang: BlocklyGames.LANG,
+       html: BlocklyGames.IS_HTML});
+
+  BlocklyInterface.init();
+
+  var rtl = BlocklyGames.isRtl();
+  var blocklyDiv = document.getElementById('blockly');
+  var onresize = function(e) {
+    blocklyDiv.style.width = (window.innerWidth - 20) + 'px';
+    blocklyDiv.style.height =
+        (window.innerHeight - blocklyDiv.offsetTop - 15) + 'px';
+  };
+  onresize();
+  window.addEventListener('resize', onresize);  
+
+  Blockly.inject(document.getElementById('blockly'),
+      {toolbox: document.getElementById('toolbox')});
+
+  
+};
+
+window.addEventListener('load', Pinball.init);
+
+
+
+5. Modify Makefile
+
+   add the following paragraph
+
+<game>-en: common-en
+	$(SOY_COMPILER) --outputPathFormat appengine/<game dir>/generated/en/soy.js --srcs appengine/<game dir>/template.soy
+	python build-app.py <game> en
+
+6. type "make <game>-en" in the prompt
+
+
